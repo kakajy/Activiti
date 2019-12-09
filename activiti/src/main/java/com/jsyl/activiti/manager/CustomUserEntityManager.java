@@ -25,10 +25,17 @@ public class CustomUserEntityManager extends UserEntityManager {
     public User findUserById(String userId) {
         log.info("id:" + userId);
         com.jsyl.activiti.pojo.User userBean = userRepository.getOne(userId);
-        User user = new UserEntity();
+        UserEntity user = new UserEntity();
         user.setId(userBean.getId());
         user.setPassword(userBean.getPassword());
         user.setLastName(userBean.getName());
+//        user.();
         return user;
+    }
+
+    @Override
+    public Boolean checkPassword(String userId, String password) {
+        System.out.println("userId:" + userId + "   password:" + password);
+        return false;
     }
 }

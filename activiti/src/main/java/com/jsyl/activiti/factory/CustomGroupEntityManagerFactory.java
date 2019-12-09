@@ -5,11 +5,13 @@ import org.activiti.engine.impl.interceptor.Session;
 import org.activiti.engine.impl.interceptor.SessionFactory;
 import org.activiti.engine.impl.persistence.entity.GroupIdentityManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @Author chenk
  * @create 2019/12/5 14:05
  */
+@Service
 public class CustomGroupEntityManagerFactory implements SessionFactory {
 
     private CustomGroupEntityManager customGroupEntityManager;
