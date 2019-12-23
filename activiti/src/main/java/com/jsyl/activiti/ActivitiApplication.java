@@ -9,11 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.stereotype.Component;
 
-@SpringBootApplication
-//        (exclude = SecurityAutoConfiguration.class)
-//@ComponentScan(value = {"com.jsyl.activiti.configuration"})
-//@Component
-//@ServletComponentScan
+@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
+@ComponentScan({"com.jsyl.activiti.configuration", "org.activiti.rest"})
 public class ActivitiApplication {
 
     public static void main(String[] args) {

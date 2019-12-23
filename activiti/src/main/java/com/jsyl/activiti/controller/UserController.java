@@ -42,4 +42,9 @@ public class UserController {
     public boolean test3() {
         return identityService.checkPassword("chenk", "chenk");
     }
+
+    @GetMapping("/test4")
+    public String test4() {
+        return "调用test4接口成功！";
+    }
 }

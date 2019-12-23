@@ -6,6 +6,9 @@ import com.jsyl.activiti.manager.CustomUserEntityManager;
 import org.activiti.engine.*;
 import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.activiti.engine.impl.interceptor.SessionFactory;
+import org.activiti.rest.common.application.ContentTypeResolver;
+import org.activiti.rest.common.application.DefaultContentTypeResolver;
+import org.activiti.rest.service.api.RestResponseFactory;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +39,7 @@ public class ActivitiConfiguration {
     public SpringProcessEngineConfiguration springProcessEngineConfiguration() {
         SpringProcessEngineConfiguration spec = new SpringProcessEngineConfiguration();
         List<SessionFactory> customSessionFactories = new ArrayList<SessionFactory>();
-        CustomUserEntityManagerFactory customUserEntityManagerFactory=new CustomUserEntityManagerFactory();
+        CustomUserEntityManagerFactory customUserEntityManagerFactory = new CustomUserEntityManagerFactory();
         customUserEntityManagerFactory.setCustomUserEntityManager(new CustomUserEntityManager());
         customSessionFactories.add(customUserEntityManagerFactory);
         spec.setCustomSessionFactories(customSessionFactories);
@@ -99,4 +102,24 @@ public class ActivitiConfiguration {
         return processEngine().getObject().getIdentityService();
     }
 
+    @Bean
+    public FormService formService() throws Exception {
+        return processEngine().getObject().getFormService();
+    }
+
+    @Bean
+    public ManagementService managementService() throws Exception {
+        return processEngine().getObject().getManagementService();
+    }
+
+    //rest service
+    @Bean
+    public RestResponseFactory restResponseFactory() {
+        return new RestResponseFactory();
+    }
+
+    @Bean
+    public ContentTypeResolver contentTypeResolver() {
+        return new DefaultContentTypeResolver();
+    }
 }
