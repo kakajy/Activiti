@@ -1,14 +1,18 @@
+server:
+  port: 8081
+
 spring:
   datasource:
-    driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: jdbc:log4jdbc:mysql://111.231.102.115:3306/activiti?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
+    driverClassName: com.mysql.jdbc.Driver
+    url:
     username: root
     password:
-#  activiti:
-#    database-schema-update: true
-#    process-definition-location-prefix: classpath:/process/
+
 logging:
   level:
     com:
       jsyl:
         activiti: Debug
+    org:
+      activiti: Debug
+

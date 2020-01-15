@@ -1,25 +1,18 @@
 package com.jsyl.activiti.configuration;
 
-import com.jsyl.activiti.factory.CustomGroupEntityManagerFactory;
 import com.jsyl.activiti.factory.CustomUserEntityManagerFactory;
 import com.jsyl.activiti.manager.CustomUserEntityManager;
 import org.activiti.engine.*;
 import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.activiti.engine.impl.interceptor.SessionFactory;
-import org.activiti.rest.common.application.ContentTypeResolver;
-import org.activiti.rest.common.application.DefaultContentTypeResolver;
-import org.activiti.rest.service.api.RestResponseFactory;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,16 +103,5 @@ public class ActivitiConfiguration {
     @Bean
     public ManagementService managementService() throws Exception {
         return processEngine().getObject().getManagementService();
-    }
-
-    //rest service
-    @Bean
-    public RestResponseFactory restResponseFactory() {
-        return new RestResponseFactory();
-    }
-
-    @Bean
-    public ContentTypeResolver contentTypeResolver() {
-        return new DefaultContentTypeResolver();
     }
 }

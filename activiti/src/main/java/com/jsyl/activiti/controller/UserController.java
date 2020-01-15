@@ -1,10 +1,10 @@
 package com.jsyl.activiti.controller;
 
-import org.activiti.engine.IdentityService;
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.ProcessEngines;
+import org.activiti.engine.*;
 import org.activiti.engine.identity.User;
 import org.activiti.engine.impl.persistence.entity.UserEntityManager;
+import org.activiti.engine.repository.Model;
+import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +23,12 @@ public class UserController {
 
     @Resource
     private UserEntityManager manager;
-    //    @Resource
-    @Autowired
+    @Resource
     private IdentityService identityService;
+    @Resource
+    private TaskService taskService;
+    @Resource
+    private RepositoryService repositoryService;
 
     @GetMapping("/query")
     public User test() {
@@ -44,7 +47,7 @@ public class UserController {
     }
 
     @GetMapping("/test4")
-    public String test4() {
-        return "调用test4接口成功！";
+    public List<Model> test4() {
+        return repositoryService.createModelQuery().list();
     }
 }
