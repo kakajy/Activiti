@@ -1,0 +1,63 @@
+包含GE的表存放通用数据
+包含HI的表是历史数据表
+包含RU的表是运行时的数据表，流程结束后会被删掉
+包含ID的表是用户信息表
+包含RE的表为仓库表，存放一些“静态”信息，如流程资源
+
+目前还没有用到的表：
+ACT_EVT_LOG
+ACT_HI_ATTACHMENT
+ACT_HI_COMMENT
+ACT_HI_DETAIL
+ACT_ID_INFO
+ACT_PROCDEF_INFO
+ACT_RE_MODEL
+ACT_RU_EVENT_SUBSCR
+ACT_RU_JOB
+
+
+1.部署流程
+http://localhost:8081/user/deploy
+（增加一条信息）insert into ACT_RE_PROCDEF
+（增加一条信息）insert into ACT_RE_DEPLOYMENT
+（增加bpmn和png两条数据）insert into ACT_GE_BYTEARRAY
+2.启动流程
+http://localhost:8081/user/start?procdefid=process:1:4
+（2参数相关）insert into ACT_HI_VARINST
+（1任务记录）insert into ACT_HI_TASKINST
+（1）insert into ACT_HI_PROCINST
+（2）insert into ACT_HI_ACTINST
+（1人员参与记录）insert into ACT_HI_IDENTITYLINK
+（1）insert into ACT_RU_EXECUTION
+（1）insert into ACT_RU_TASK
+（1）insert into ACT_RU_IDENTITYLINK
+（2）INSERT INTO ACT_RU_VARIABLE
+3.完成节点
+http://localhost:8081/user/submit
+（2）insert into ACT_HI_VARINST
+（1）insert into ACT_HI_TASKINST
+（1）insert into ACT_HI_ACTINST
+（1）insert into ACT_RU_TASK
+（2）INSERT INTO ACT_RU_VARIABLE
+（1）update ACT_HI_ACTINST
+（1）update ACT_HI_TASKINST
+（1）update ACT_RU_EXECUTION
+（1）delete from ACT_RU_TASK
+4.主管审核(name可填用户或角色名)
+http://localhost:8081/user/check?name=zhuguan&answer=true
+5.经理审核
+http://localhost:8081/user/check?name=jingli&answer=true
+6.人事审核
+http://localhost:8081/user/check?name=renshi&answer=true
+
+
+
+
+
+
+
+
+
+
+
+
