@@ -1,6 +1,8 @@
 package com.jsyl.activiti.controller;
 
 import com.google.gson.Gson;
+import com.jsyl.activiti.pojo.Project;
+import com.jsyl.activiti.repository.ProjectRespository;
 import org.activiti.engine.*;
 import org.activiti.engine.identity.Group;
 import org.activiti.engine.identity.User;
@@ -41,6 +43,8 @@ public class UserController {
     private RepositoryService repositoryService;
     @Resource
     private RuntimeService runtimeService;
+    @Resource
+    private ProjectRespository projectRespository;
 
     Gson GSON = new Gson();
     private static final org.apache.log4j.Logger LOG = Logger.getLogger(UserController.class);
@@ -129,13 +133,23 @@ public class UserController {
             LOG.info("执行对象ID：" + task.getExecutionId());
             LOG.info("流程定义ID：" + task.getProcessDefinitionId());
         }
+        Project project = addProject();
         Map<String, Object> variables = new HashMap<>();
         variables.put("startTime", calculateDate(sdf2.parse("2020-01-01 10:00"), 0, 10, 0));
         variables.put("endTime", calculateDate(sdf2.parse("2020-01-01 10:00"), 0, 12, 0));
+        variables.put("refId", project.getId());
         taskService.complete(tasks.get(0).getId(), variables);
         return "success";
     }
 
+    public Project addProject() {
+        Project project = new Project();
+        project.setName("0120测试！");
+        project.setCode("2020012001");
+        project.setOperator("chenk");
+        project.setOperateTime(new Date());
+        return projectRespository.save(project);
+    }
 
     /**
      * 用户审核
@@ -167,43 +181,38 @@ public class UserController {
 
     @GetMapping("/addUserAndRole")
     public String addUserAndRole() {
-        List<String> users = new ArrayList<>();
-        users.add("chenk");
-        users.add("zhuguan");
-        users.add("jingli");
-        users.add("renshi");
-        List<String> groups = new ArrayList<>();
-        groups.add("user");
-        groups.add("supervisor");
-        groups.add("manager");
-        groups.add("personnel");
+        String[] users = {"chenk", "zhuguan", "jingli", "renshi"};
+        String[] groups = {"user", "supervisor", "manager", "personnel"};
         User user;
         Group group;
-        for (int i = 0; i < groups.size(); i++) {
+        for (int i = 0; i < groups.length; i++) {
             user = new UserEntity();
-            user.setId(users.get(i));
-            user.setFirstName(users.get(i));
+            user.setId(users[i]);
+            user.setFirstName(users[i]);
             user.setPassword("111111");
             identityService.saveUser(user);
 
             group = new GroupEntity();
-            group.setId(groups.get(i));
+            group.setId(groups[i]);
             identityService.saveGroup(group);
-            identityService.createMembership(users.get(i), groups.get(i));
+            identityService.createMembership(users[i], groups[i]);
         }
         return "success";
     }
 
     public Date calculateDate(Date date, Integer days, Integer hour, Integer min) {
-        Date result = null;
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
         calendar.set(calendar.HOUR_OF_DAY, hour);
         calendar.set(calendar.MINUTE, min);
         calendar.set(calendar.SECOND, 0);
         calendar.set(calendar.MILLISECOND, 0);
-        result = DateUtils.addDays(calendar.getTime(), days);
+        Date result = DateUtils.addDays(calendar.getTime(), days);
         return result;
     }
 
+    @GetMapping("/query/project")
+    public List<Project> queryProject(int procId) {
+        return projectRespository.findByProcId(procId);
+    }
 }
