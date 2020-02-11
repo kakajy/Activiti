@@ -51,7 +51,61 @@ http://localhost:8081/user/check?name=jingli&answer=true
 http://localhost:8081/user/check?name=renshi&answer=true
 
 
+流程信息存储在ACT_RE_PROCDEF表中，key可以作为关键字，在启动流程时模糊搜索该字段，并通过version降序排列查询最新的流程定义
 
+数据流转流程
+1.部署：
+  act_re_deployment中新增一条信息，记录本次部署的基本信息
+  act_ge_bytearray中添加两条信息，记录本次上传的bpmn和png信息，与act_re_deployment中的id关联
+  act_re_procdef中新增一条信息，记录bpmn包含的基本信息，与act_re_deployment中的id关联
+2.启动流程：
+  act_ru_execution表中新增一条记录，记录的是这个流程定义的执行实例，proc_def_id_与act_re_procdef中id关联
+  act_ru_task新增一条记录，记录的是第一个任务的信息，包含act_ru_execution和proc_inst_id_的id(两者相同)
+  act_hi_procinst和act_hi_taskinst表中各插入一条记录，记录的是本次执行实例和任务的历史记录
+3.设置参数：
+  act_ru_variable表中插入变量信息，包含本次流程执行实例的两个id外键，但不包括任务的id，因为setVariable方法设置的是全局变量，也就是整个流程都会有效的变量
+  执行完task1后，act_ru_task表中task1的记录被删除，新插入task2的记录
+  同时act_ru_execution表中的记录并没有删除，而是将正在执行的任务变成task2
+  同时向act_hi_var_inst和act_hi_taskinst插入历史记录
+4.完成流程：
+  act_ru_task，act_ru_execution和act_ru_variable表全被清空
+  act_hi_actinst新增完成任务记录
+
+
+外键：
+1.ACT_GE_BYTEARRAY表：
+  DEPLOYMENT_ID_与ACT_RE_DEPLOYMENT的ID_
+2.ACT_ID_MEMBERSHIP表：
+  GROUP_ID_与ACT_ID_GROUP的ID_
+  USER_ID_与ACT_ID_USER的ID_
+3.ACT_PROCDEF_INFO表：
+  INFO_JSON_ID_与ACT_GE_BYTEARRAY的ID_
+  PROC_DEF_ID_与ACT_RE_PROCDEF的ID_
+4.ACT_RE_MODEL表：
+  DEPLOYMENT_ID_与ACT_RE_DEPLOYMENT的ID_
+  EDITOR_SOURCE_VALUE_ID_与ACT_GE_BYTEARRAY的ID_
+  EDITOR_SOURCE_EXTRA_VALUE_ID_与ACT_GE_BYTEARRAY的ID_
+5.ACT_RU_EVENT_SUBSCR表：
+  EXECUTION_ID_与ACT_RU_EXECUTION的ID_
+6.ACT_RU_EXECUTION表：
+  PARENT_ID_与ACT_RU_EXECUTION的ID_
+  PROC_DEF_ID_与ACT_RE_PROCDEF的ID_
+  PROC_INST_ID_与ACT_RU_EXECUTION的ID_
+  SUPER_EXEC_与ACT_RU_EXECUTION的ID_
+7.ACT_RU_IDENTITYLINK表：
+  PROC_DEF_ID_与ACT_RE_PROCDEF的ID_
+  PROC_INST_ID_与ACT_RU_EXECUTION的ID_
+  TASK_ID_与ACT_RU_TASK的ID_
+8.ACT_RU_JOB表：
+  EXCEPTION_STACK_ID_与ACT_GE_BYTEARRAY的ID_
+9.ACT_RU_TASK表：
+  EXECUTION_ID_与ACT_RU_EXECUTION的ID_
+  PROC_DEF_ID_与ACT_RE_PROCDEF的ID_
+  PROC_INST_ID_与ACT_RU_EXECUTION的ID_
+10.ACT_RU_VARIABLE表：
+  BYTEARRAY_ID_与ACT_GE_BYTEARRAY的ID_
+  EXECUTION_ID_与ACT_RU_EXECUTION的ID_
+  PROC_INST_ID_与CT_RU_EXECUTION的ID_
 
 
 
